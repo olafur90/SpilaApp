@@ -1,4 +1,4 @@
-import { View, Button, StyleSheet, Image } from 'react-native';
+import { View, Button, StyleSheet } from 'react-native';
 import React from 'react';
 
 export const PlayGameButton = ({ navigation, game }) => {
