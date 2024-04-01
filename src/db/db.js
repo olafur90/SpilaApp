@@ -15,25 +15,22 @@ export const connectToDatabase = async () => {
 };
 
 export const createTables = async db => {
-  const userPreferencesQuery = `
-      CREATE TABLE IF NOT EXISTS UserPreferences (
-          id INTEGER DEFAULT 1,
-          colorPreference TEXT,
-          languagePreference TEXT,
-          PRIMARY KEY(id)
-      )
-    `;
-  const contactsQuery = `
-     CREATE TABLE IF NOT EXISTS Contacts (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        firstName TEXT,
-        name TEXT,
-        phoneNumber TEXT
-     )
-    `;
+  const createScrabbleTableQuery = `
+    CREATE TABLE IF NOT EXISTS Scrabble (
+      id INTEGER PRIMARY KEY AUTOINCREMENT
+
+    )
+  `;
+  const createUsersTableQuery = `
+    CREATE TABLE IF NOT EXISTS Users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT,
+      wins INTEGER
+    )
+  `;
   try {
-    await db.executeSql(userPreferencesQuery);
-    await db.executeSql(contactsQuery);
+    await db.executeSql(createScrabbleTableQuery);
+    await db.executeSql(createUsersTableQuery);
   } catch (error) {
     console.error(error);
     throw Error('Failed to create tables');
@@ -44,7 +41,7 @@ export const getTableNames = async db => {
   try {
     const tableNames = [];
     const results = await db.executeSql(
-      "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'",
+      "SELECT name FROM sqlite_master WHERE type='table'",
     );
     results?.forEach(result => {
       for (let index = 0; index < result.rows.length; index++) {
@@ -57,6 +54,8 @@ export const getTableNames = async db => {
     throw Error('Failed to get table names from database');
   }
 };
+
+/*
 
 export const removeTable = async (db, tableName) => {
   const query = `DROP TABLE IF EXISTS ${tableName}`;
@@ -80,6 +79,7 @@ export const addContact = async (db, contact) => {
     throw Error('Failed to add contact');
   }
 };
+*/
 
 // TODO: Finish implementing SQLite functions, more info here:
 // https://medium.com/@julien-ctx/integrating-sqlite-with-react-native-a-beginners-tutorial-a74bbe34ac6a

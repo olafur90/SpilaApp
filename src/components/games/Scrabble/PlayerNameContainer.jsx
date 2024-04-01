@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
   useColorScheme,
@@ -14,17 +15,62 @@ import Icon from 'react-native-vector-icons/Entypo';
  * @param {playerName} string
  * @returns {JSX.Element}
  */
-export const PlayerNameContainer = ({ playerName }) => {
+export const PlayerNameContainer = ({
+  playerName,
+  playerNumber,
+  onPlayerNameChange,
+}) => {
+  const [inEditMode, setInEditMode] = useState(false);
+  const [newPlayerName, setNewPlayerOneName] = useState(playerName);
+
   const colorScheme = useColorScheme();
+
+  const handlePlayerNameChange = newName => {
+    onPlayerNameChange(playerNumber, newName);
+    setInEditMode(false);
+  };
+
   return (
     <View style={styles.playerNameContainer}>
-      <TouchableOpacity style={[styles.editButton]}>
-        <Icon style={[colorScheme === 'dark' && styles.darkText]} name="edit" />
-      </TouchableOpacity>
-      <Text
-        style={[styles.playerName, colorScheme === 'dark' && styles.darkText]}>
-        {playerName}
-      </Text>
+      {!inEditMode ? (
+        <TouchableOpacity
+          onPress={() => setInEditMode(true)}
+          style={[styles.editButton]}>
+          <Icon
+            style={[colorScheme === 'dark' && styles.darkText]}
+            name="edit"
+          />
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity
+          onPress={() => handlePlayerNameChange(newPlayerName)}
+          style={[styles.editButton]}>
+          <Icon
+            style={[colorScheme === 'dark' && styles.darkText]}
+            name="check"
+          />
+        </TouchableOpacity>
+      )}
+      {inEditMode ? (
+        <TextInput
+          value={newPlayerName}
+          maxLength={10}
+          onChangeText={value => setNewPlayerOneName(value)}
+          onBlur={() => setInEditMode(false)}
+          style={[
+            styles.editPlayerName,
+            colorScheme === 'dark' && styles.darkText,
+          ]}
+        />
+      ) : (
+        <Text
+          style={[
+            styles.playerName,
+            colorScheme === 'dark' && styles.darkText,
+          ]}>
+          {playerName}
+        </Text>
+      )}
     </View>
   );
 };
@@ -34,6 +80,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 5,
+  },
+  editPlayerName: {
+    borderWidth: 1,
+    color: 'black',
   },
   playerNameDark: {
     fontSize: 20,

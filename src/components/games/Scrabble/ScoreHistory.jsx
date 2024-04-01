@@ -10,11 +10,14 @@ export const ScoreHistory = ({ history }) => {
   return (
     history[0] && (
       <ScrollView style={styles.scoreHistory}>
-        {history.map((score, index) => (
-          <Text style={styles.scoreHistoryText} key={index}>
-            {score}
-          </Text>
-        ))}
+        {history
+          .slice()
+          .reverse()
+          .map((score, index) => (
+            <Text style={styles.scoreHistoryText} key={index}>
+              {score}
+            </Text>
+          ))}
       </ScrollView>
     )
   );

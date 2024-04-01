@@ -9,9 +9,9 @@ import { ScoreHistory } from './ScoreHistory';
  * @returns {JSX.Element}
  */
 export default function Scrabble() {
-  const [playerScores, setPlayerScores] = useState([
-    { score: 0, scoreInput: '', history: [] },
-    { score: 0, scoreInput: '', history: [] },
+  const [players, setPlayers] = useState([
+    { playerName: 'Leikmaður 1', score: 0, scoreInput: '', history: [] },
+    { playerName: 'Leikmaður 2', score: 0, scoreInput: '', history: [] },
   ]);
   const [playerTurn, setPlayerTurn] = useState(1);
 
@@ -25,7 +25,7 @@ export default function Scrabble() {
    * @param {*} value
    */
   const handleScoreUpdate = (playerNumber, value) => {
-    setPlayerScores(prevState => {
+    setPlayers(prevState => {
       const newState = [...prevState];
       newState[playerNumber - 1].scoreInput = value;
       return newState;
@@ -37,13 +37,21 @@ export default function Scrabble() {
    * @param {playerNumber} playerNumber string
    */
   const addScore = playerNumber => {
-    setPlayerScores(prevState => {
+    setPlayers(prevState => {
       const newState = [...prevState];
       const currentPlayer = newState[playerNumber - 1];
       currentPlayer.score += Number(currentPlayer.scoreInput);
       currentPlayer.history.push(Number(currentPlayer.scoreInput));
       currentPlayer.scoreInput = '';
       playerTurn === 2 ? setPlayerTurn(1) : setPlayerTurn(2);
+      return newState;
+    });
+  };
+
+  const handlePlayerNameChange = (playerNumber, value) => {
+    setPlayers(prevState => {
+      const newState = [...prevState];
+      newState[playerNumber - 1].playerName = value;
       return newState;
     });
   };
@@ -55,20 +63,21 @@ export default function Scrabble() {
       imageStyle={styles.gameBackgroundImage}
       source={gameBackgroundImageURI}>
       <View style={styles.scoreHistoryContainer}>
-        {playerScores.map((player, index) => (
+        {players.map((player, index) => (
           <PlayerInputContainer
             key={index}
-            playerName={`Leikmaður ${index + 1}`}
+            playerName={player.playerName}
             playerNumber={index + 1}
             playerTurn={playerTurn}
             onScoreUpdate={handleScoreUpdate}
             onAddScore={addScore}
+            onPlayerNameChange={handlePlayerNameChange}
           />
         ))}
       </View>
-      <CurrentPlayerScores playerScores={playerScores} />
+      <CurrentPlayerScores playerScores={players} />
       <View style={styles.scoreHistoryContainer}>
-        {playerScores.map((player, index) => (
+        {players.map((player, index) => (
           <ScoreHistory key={index} history={player.history} />
         ))}
       </View>

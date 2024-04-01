@@ -19,6 +19,7 @@ export const PlayerInputContainer = ({
   playerTurn,
   onScoreUpdate,
   onAddScore,
+  onPlayerNameChange,
 }) => {
   const [scoreInput, setScoreInput] = useState('');
 
@@ -34,15 +35,27 @@ export const PlayerInputContainer = ({
 
   return (
     <View style={styles.addScoreInput}>
-      <PlayerNameContainer playerName={playerName} />
-      <TextInput
-        value={scoreInput}
-        onChangeText={handleScoreUpdate}
-        style={styles.playerScoreInput}
+      <PlayerNameContainer
+        onPlayerNameChange={onPlayerNameChange}
+        playerName={playerName}
+        playerNumber={playerNumber}
       />
-      <TouchableOpacity style={styles.addScoreButton}>
+      <TextInput
+        value={playerTurn === playerNumber ? scoreInput : ''}
+        editable={playerTurn === playerNumber}
+        keyboardType="numeric"
+        maxLength={3}
+        onChangeText={handleScoreUpdate}
+        style={[
+          styles.playerScoreInput,
+          playerTurn !== playerNumber && styles.playerScoreInputDisabled,
+        ]}
+      />
+      <TouchableOpacity
+        disabled={playerTurn !== playerNumber || !scoreInput}
+        style={styles.addScoreButton}>
         <Button
-          disabled={playerTurn !== playerNumber}
+          disabled={playerTurn !== playerNumber || !scoreInput}
           onPress={() => UpdateScore()}
           title="Skrá"
         />
@@ -62,7 +75,12 @@ const styles = StyleSheet.create({
   playerScoreInput: {
     backgroundColor: 'white',
     borderWidth: 1,
+    color: 'black',
     height: 40,
+    paddingLeft: 10,
     width: '100%',
+  },
+  playerScoreInputDisabled: {
+    backgroundColor: '#ddd',
   },
 });
