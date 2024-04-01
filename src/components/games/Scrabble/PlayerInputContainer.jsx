@@ -16,6 +16,7 @@ import { PlayerNameContainer } from './PlayerNameContainer';
 export const PlayerInputContainer = ({
   playerName,
   playerNumber,
+  playerTurn,
   onScoreUpdate,
   onAddScore,
 }) => {
@@ -24,6 +25,11 @@ export const PlayerInputContainer = ({
   const handleScoreUpdate = value => {
     setScoreInput(value);
     onScoreUpdate(playerNumber, value);
+  };
+
+  const UpdateScore = () => {
+    onAddScore(playerNumber);
+    setScoreInput('');
   };
 
   return (
@@ -35,20 +41,28 @@ export const PlayerInputContainer = ({
         style={styles.playerScoreInput}
       />
       <TouchableOpacity style={styles.addScoreButton}>
-        <Button onPress={() => onAddScore(playerNumber)} title="Skrá" />
+        <Button
+          disabled={playerTurn !== playerNumber}
+          onPress={() => UpdateScore()}
+          title="Skrá"
+        />
       </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  addScoreButton: {
+    marginTop: 5,
+    width: '45%',
+  },
   addScoreInput: {
     width: '45%',
   },
   playerScoreInput: {
     backgroundColor: 'white',
     borderWidth: 1,
-    width: '100%',
     height: 40,
+    width: '100%',
   },
 });

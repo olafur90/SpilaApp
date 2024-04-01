@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 
-const games = [
+export const GAMES = [
   {
     name: 'Yatzy',
     image:
@@ -45,7 +45,7 @@ export const PlayGameButton = ({ navigation, game }) => {
 export default function Home({ navigation }) {
   return (
     <View style={styles.home}>
-      {games.map(game => (
+      {GAMES.map(game => (
         <PlayGameButton key={game.name} navigation={navigation} game={game} />
       ))}
     </View>

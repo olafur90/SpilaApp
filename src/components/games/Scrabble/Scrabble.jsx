@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ImageBackground, StyleSheet, View } from 'react-native';
+import CurrentPlayerScores from './CurrentPlayerScores';
 import { PlayerInputContainer } from './PlayerInputContainer';
 import { ScoreHistory } from './ScoreHistory';
 
@@ -9,9 +10,10 @@ import { ScoreHistory } from './ScoreHistory';
  */
 export default function Scrabble() {
   const [playerScores, setPlayerScores] = useState([
-    { score: 0, scoreInput: '', history: [10, 20, 30, 40, 50] },
-    { score: 0, scoreInput: '', history: [10, 30, 10, 20, 129, 10] },
+    { score: 0, scoreInput: '', history: [] },
+    { score: 0, scoreInput: '', history: [] },
   ]);
+  const [playerTurn, setPlayerTurn] = useState(1);
 
   /**
    * Update the score input
@@ -37,34 +39,43 @@ export default function Scrabble() {
       currentPlayer.score += Number(currentPlayer.scoreInput);
       currentPlayer.history.push(Number(currentPlayer.scoreInput));
       currentPlayer.scoreInput = '';
+      playerTurn === 2 ? setPlayerTurn(1) : setPlayerTurn(2);
       return newState;
     });
   };
 
   return (
-    <View>
-      <View style={styles.addScoreContainer}>
+    <ImageBackground
+      resizeMethod="auto"
+      style={{ height: '100%' }}
+      imageStyle={{ opacity: 0.3 }}
+      source={{
+        uri: 'https://upload.wikimedia.org/wikipedia/commons/5/5d/Scrabble_game_in_progress.jpg',
+      }}>
+      <View style={styles.scoreHistoryContainer}>
         {playerScores.map((player, index) => (
           <PlayerInputContainer
             key={index}
             playerName={`Spilari ${index + 1}`}
             playerNumber={index + 1}
+            playerTurn={playerTurn}
             onScoreUpdate={handleScoreUpdate}
             onAddScore={addScore}
           />
         ))}
       </View>
-      <View style={styles.addScoreContainer}>
+      <CurrentPlayerScores playerScores={playerScores} />
+      <View style={styles.scoreHistoryContainer}>
         {playerScores.map((player, index) => (
           <ScoreHistory key={index} history={player.history} />
         ))}
       </View>
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  addScoreContainer: {
+  scoreHistoryContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginHorizontal: 20,
