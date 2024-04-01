@@ -1,18 +1,43 @@
-import { NavigationContainer } from '@react-navigation/native';
-import React from 'react';
-import Yatzy from './games/Yatzy';
+import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Scrabble from './games/Scrabble';
-import Rommi from './games/Rommi';
+import React, { useCallback, useEffect } from 'react';
+import { connectToDatabase, createTables } from '../db/db';
 import Home from './Home';
+import Rommi from './games/Rommi';
+import Scrabble from './games/Scrabble/Scrabble';
+import Yatzy from './games/Yatzy';
 
 const Stack = createNativeStackNavigator();
 
+<script src="http://192.168.1.9:8097"></script>;
+
 export default function App() {
+  const loadData = useCallback(async () => {
+    try {
+      const db = await connectToDatabase();
+      await createTables(db);
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={MyTheme}>
       <Stack.Navigator>
-        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen
+          options={{
+            headerTintColor: '#000',
+            headerStyle: { backgroundColor: '#fff' },
+            headerTitleAlign: 'center',
+            title: 'Spila Appið',
+          }}
+          name="Heim"
+          component={Home}
+        />
         <Stack.Screen name="Scrabble" component={Scrabble} />
         <Stack.Screen name="Yatzy" component={Yatzy} />
         <Stack.Screen name="Rommi" component={Rommi} />
@@ -20,3 +45,11 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
+const MyTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: 'transparent',
+  },
+};
