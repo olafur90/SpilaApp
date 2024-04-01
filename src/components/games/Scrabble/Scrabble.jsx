@@ -15,8 +15,12 @@ export default function Scrabble() {
   ]);
   const [playerTurn, setPlayerTurn] = useState(1);
 
+  const gameBackgroundImageURI = {
+    uri: 'https://upload.wikimedia.org/wikipedia/commons/5/5d/Scrabble_game_in_progress.jpg',
+  };
+
   /**
-   * Update the score input
+   * Update the score input of the current player
    * @param {*} playerNumber
    * @param {*} value
    */
@@ -29,8 +33,8 @@ export default function Scrabble() {
   };
 
   /**
-   * Add the score to the player's score
-   * @param {*} playerNumber
+   * Add the current player's score to their total score
+   * @param {playerNumber} playerNumber string
    */
   const addScore = playerNumber => {
     setPlayerScores(prevState => {
@@ -44,20 +48,17 @@ export default function Scrabble() {
     });
   };
 
-  // TODO: remove inline styles
   return (
     <ImageBackground
       resizeMethod="auto"
-      style={{ height: '100%' }}
-      imageStyle={{ opacity: 0.3 }}
-      source={{
-        uri: 'https://upload.wikimedia.org/wikipedia/commons/5/5d/Scrabble_game_in_progress.jpg',
-      }}>
+      style={styles.gameBackground}
+      imageStyle={styles.gameBackgroundImage}
+      source={gameBackgroundImageURI}>
       <View style={styles.scoreHistoryContainer}>
         {playerScores.map((player, index) => (
           <PlayerInputContainer
             key={index}
-            playerName={`Spilari ${index + 1}`}
+            playerName={`Leikmaður ${index + 1}`}
             playerNumber={index + 1}
             playerTurn={playerTurn}
             onScoreUpdate={handleScoreUpdate}
@@ -81,5 +82,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginHorizontal: 20,
     paddingTop: 10,
+  },
+  gameBackground: {
+    height: '100%',
+  },
+  gameBackgroundImage: {
+    opacity: 0.3,
   },
 });
