@@ -44,6 +44,7 @@ export default function Scrabble() {
     });
   };
 
+  // TODO: remove inline styles
   return (
     <ImageBackground
       resizeMethod="auto"

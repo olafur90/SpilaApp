@@ -9,6 +9,8 @@ import Yatzy from './games/Yatzy';
 
 const Stack = createNativeStackNavigator();
 
+// TODO: Delete script when done debugging
+// eslint-disable-next-line react/self-closing-comp
 <script src="http://192.168.1.9:8097"></script>;
 
 export default function App() {
@@ -50,6 +52,6 @@ const MyTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    background: 'transparent',
+    background: '#f5f5f5',
   },
 };
