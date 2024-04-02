@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { PlayerNameContainer } from './PlayerNameContainer';
+import { PlayerNameContainer } from '../../util/PlayerNameContainer';
 
 /**
  * A component that allows the user to add a score to a player

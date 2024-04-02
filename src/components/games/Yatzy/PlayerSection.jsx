@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { PlayerNameContainer } from '../../util/PlayerNameContainer';
 
 export const PlayerSection = ({ index, player, setPlayers }) => {
     const [typeOfScore, setTypeOfScore] = useState([
@@ -23,13 +24,7 @@ export const PlayerSection = ({ index, player, setPlayers }) => {
 
     const handleScoreChange = () => {
         const totalScore = typeOfScore.reduce((acc, curr) => acc + curr.score, 0);
-
     }
-
-    // Update the total score when typeOfScore changes
-    useEffect(() => {
-        handleScoreChange();
-    }, [typeOfScore]);
 
     return (
         <View>
@@ -57,10 +52,20 @@ export const TypeItem = ({ scoreType, handleScoreChange }) => {
     )
 }
 
-export const PlayerInfo = () => {
+export const PlayerInfo = ({ 
+    playerName, 
+    playerNumber, 
+    onPlayerNameChange 
+}) => {
     return (
         <View>
-            { /* TODO: Component for each player */}
+            { /* TODO: Component for each player
+                See if this component can be reused here */
+            }
+            <PlayerNameContainer 
+                playerNumber={playerNumber} 
+                onPlayerNameChange={onPlayerNameChange} 
+                playerName={playerName} />
         </View>
     )
 }

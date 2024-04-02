@@ -19,6 +19,23 @@ export default function Yatzy() {
   const gameBackgroundImageURI = {
     uri: 'https://play-lh.googleusercontent.com/AWFhjdqGOodPYMI8BtJssHkc93QCkVCnC5SZOr25YDp5e-4bNkNTKfOfXSwVtbfdsiVC',
   }
+
+  const handlePlayerNameChange = (playerNumber, value) => {
+    setPlayers(prevState => {
+      const newState = [...prevState];
+      newState[playerNumber - 1].playerName = value;
+      return newState;
+    });
+  };
+
+  const handleScoreUpdate = (playerNumber, value) => {
+    setPlayers(prevState => {
+      const newState = [...prevState];
+      newState[playerNumber - 1].scoreInput = value;
+      return newState;
+    });
+  };
+
   return (
     <ImageBackground
       resizeMethod="auto"
@@ -26,7 +43,13 @@ export default function Yatzy() {
       imageStyle={styles.gameBackgroundImage}
       source={gameBackgroundImageURI}>
       {players.map((player, index) => (
-        <PlayerSection key={index} index={index} player={player} setPlayers={setPlayers} />
+        <PlayerSection 
+          key={index} 
+          player={player}
+          onScoreUpdate={handleScoreUpdate}
+          playerNumber={index + 1}
+          onPlayerNameChange={handlePlayerNameChange}
+          setPlayers={setPlayers} />
       ))}
     </ImageBackground>
   );
