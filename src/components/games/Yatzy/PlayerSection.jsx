@@ -72,6 +72,7 @@ export const TypeItem = ({ scoreType, handleScoreChange }) => {
         {scoreType.canEdit ? (
           <>
             <TextInput
+              keyboardType="numeric"
               style={styles.scoreInput}
               onChangeText={handleScoreChange}
             />
@@ -128,9 +129,11 @@ const styles = StyleSheet.create({
   scoreInput: {
     backgroundColor: 'white',
     borderWidth: 1,
+    color: 'black',
     flex: 4,
     maxHeight: 50,
     marginLeft: 15,
     marginVertical: 5,
+    textAlign: 'center',
   },
 });
