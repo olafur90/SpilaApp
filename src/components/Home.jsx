@@ -25,7 +25,7 @@ export const GAMES = [
   },
 ];
 
-export const PlayGameButton = ({ navigation, game }) => {
+export const Game = ({ navigation, game }) => {
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -46,7 +46,7 @@ export default function Home({ navigation }) {
   return (
     <View style={styles.home}>
       {GAMES.map(game => (
-        <PlayGameButton key={game.name} navigation={navigation} game={game} />
+        <Game key={game.name} navigation={navigation} game={game} />
       ))}
     </View>
   );
@@ -61,24 +61,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
     height: '30%',
-    width: '90%',
     justifyContent: 'center',
     marginVertical: 9,
-  },
-  yatzy: {
-    height: '100%',
-    maxHeight: '100%',
+    width: '90%',
   },
   imageBackground: {
-    flex: 1,
-    borderWidth: 1,
-    width: '100%',
-    justifyContent: 'flex-end',
     alignItems: 'center',
+    borderWidth: 1,
+    flex: 1,
+    justifyContent: 'flex-end',
+    width: '100%',
   },
   playButton: {
-    borderTopWidth: 1,
     borderTopColor: 'white',
+    borderTopWidth: 1,
     color: 'white',
     opacity: 0.96,
     width: '100%',

@@ -13,7 +13,7 @@ import { PlayerNameContainer } from './PlayerNameContainer';
  * @param {*} {playerName, playerNumber, onScoreUpdate, onAddScore}
  * @returns {JSX.Element}
  */
-export const PlayerInputContainer = ({
+export const PlayerScoreInputContainer = ({
   playerName,
   playerNumber,
   playerTurn,

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { ImageBackground, StyleSheet, View } from 'react-native';
 import CurrentPlayerScores from './CurrentPlayerScores';
-import { PlayerInputContainer } from './PlayerInputContainer';
+import { PlayerScoreInputContainer } from './PlayerInputContainer';
 import { ScoreHistory } from './ScoreHistory';
 
 /**
- * The main component of the Scrabble game.
+ * The main game component for the Scrabble game.
  * @returns {JSX.Element}
  */
 export default function Scrabble() {
@@ -64,7 +64,7 @@ export default function Scrabble() {
       source={gameBackgroundImageURI}>
       <View style={styles.scoreHistoryContainer}>
         {players.map((player, index) => (
-          <PlayerInputContainer
+          <PlayerScoreInputContainer
             key={index}
             playerName={player.playerName}
             playerNumber={index + 1}

@@ -21,7 +21,7 @@ export const PlayerNameContainer = ({
   onPlayerNameChange,
 }) => {
   const [inEditMode, setInEditMode] = useState(false);
-  const [newPlayerName, setNewPlayerOneName] = useState(playerName);
+  const [newPlayerName, setNewPlayerName] = useState(playerName);
 
   const colorScheme = useColorScheme();
 
@@ -54,8 +54,8 @@ export const PlayerNameContainer = ({
       {inEditMode ? (
         <TextInput
           value={newPlayerName}
-          maxLength={10}
-          onChangeText={value => setNewPlayerOneName(value)}
+          maxLength={12}
+          onChangeText={value => setNewPlayerName(value)}
           onBlur={() => setInEditMode(false)}
           style={[
             styles.editPlayerName,

@@ -2,7 +2,7 @@ import React from 'react';
 import { ScrollView, StyleSheet, Text } from 'react-native';
 
 /**
- *
+ * A component that displays the score history of the current player
  * @param {history} array of numbers
  * @returns {JSX.Element}
  */

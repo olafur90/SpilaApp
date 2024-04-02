@@ -1,12 +1,14 @@
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useEffect } from 'react';
+import { StyleSheet } from 'react-native';
 import { connectToDatabase, createTables } from '../db/db';
 import Home from './Home';
-import Rommi from './games/Rommi';
+import Rommi from './games/Rommi/Rommi';
 import Scrabble from './games/Scrabble/Scrabble';
-import Yatzy from './games/Yatzy';
+import Yatzy from './games/Yatzy/Yatzy';
 
+// For navigation between game elements
 const Stack = createNativeStackNavigator();
 
 // TODO: Delete script when done debugging
@@ -14,13 +16,11 @@ const Stack = createNativeStackNavigator();
 <script src="http://192.168.1.9:8097"></script>;
 
 export default function App() {
+  const appName = 'Spila Appið';
   useEffect(() => {
     const initializeDatabase = async () => {
       try {
-        // Connect to the database
         const db = await connectToDatabase();
-
-        // Create tables if they don't exist
         await createTables(db);
       } catch (error) {
         console.error('Error initializing database:', error);
@@ -37,9 +37,9 @@ export default function App() {
           <Stack.Screen
             options={{
               headerTintColor: '#000',
-              headerStyle: { backgroundColor: '#fff' },
+              headerStyle: styles.header, // FIXME: Possible error
               headerTitleAlign: 'center',
-              title: 'Spila Appið',
+              title: { appName },
             }}
             name="Heim"
             component={Home}
@@ -60,3 +60,9 @@ const MyTheme = {
     background: '#f5f5f5',
   },
 };
+
+const styles = StyleSheet.create({
+  header: {
+    backgroundColor: '#fff',
+  }
+})
