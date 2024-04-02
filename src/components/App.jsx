@@ -1,7 +1,6 @@
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { useEffect } from 'react';
-import { StyleSheet } from 'react-native';
 import { connectToDatabase, createTables } from '../db/db';
 import Home from './Home';
 import Rommi from './games/Rommi/Rommi';
@@ -37,9 +36,9 @@ export default function App() {
           <Stack.Screen
             options={{
               headerTintColor: '#000',
-              headerStyle: styles.header, // FIXME: Possible error
+              headerStyle: { backgroundColor: '#fff' },
               headerTitleAlign: 'center',
-              title: { appName },
+              title: appName,
             }}
             name="Heim"
             component={Home}
@@ -60,9 +59,3 @@ const MyTheme = {
     background: '#f5f5f5',
   },
 };
-
-const styles = StyleSheet.create({
-  header: {
-    backgroundColor: '#fff',
-  }
-})
