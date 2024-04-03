@@ -56,7 +56,6 @@ export const PlayerNameContainer = ({
           value={newPlayerName}
           maxLength={12}
           onChangeText={value => setNewPlayerName(value)}
-          onBlur={() => setInEditMode(false)}
           style={[
             styles.editPlayerName,
             colorScheme === 'dark' && styles.darkText,

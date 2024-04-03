@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ImageBackground, StyleSheet, View } from 'react-native';
 import CurrentPlayerScores from './CurrentPlayerScores';
-import { PlayerScoreInputContainer } from './PlayerInputContainer';
+import { PlayerScoreInputContainer } from './PlayerScoreInputContainer';
 import { ScoreHistory } from './ScoreHistory';
 
 /**

@@ -46,8 +46,8 @@ export default function Yatzy() {
         <PlayerSection
           key={index}
           player={player}
-          onScoreUpdate={handleScoreUpdate}
           playerNumber={index + 1}
+          onScoreUpdate={handleScoreUpdate}
           onPlayerNameChange={handlePlayerNameChange}
           setPlayers={setPlayers}
         />
