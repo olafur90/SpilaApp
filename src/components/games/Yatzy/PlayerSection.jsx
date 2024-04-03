@@ -59,8 +59,9 @@ export const PlayerSection = ({ onPlayerNameChange, playerNumber, player }) => {
   };
 
   const setSumOfFirstSix = () => {
+    const firstSix = typeOfScore.slice(0, 6);
     let sum = 0;
-    typeOfScore.forEach(score => {
+    firstSix.forEach(score => {
       if (score.type === 'Summa') {
         return;
       }
