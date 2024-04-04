@@ -16,6 +16,9 @@ export const PlayerSection = ({
   playerNumber,
   player,
 }) => {
+  const bonus = 63;
+
+  /*
   const [typeOfScore, setTypeOfScore] = useState([
     { canEdit: true, type: 'Ásar', score: 0, maxScore: 6 },
     { canEdit: true, type: 'Tvistar', score: 0, maxScore: 12 },
@@ -26,7 +29,7 @@ export const PlayerSection = ({
     { canEdit: false, type: 'Summa', score: 0, maxScore: 126 },
     {
       canEdit: false,
-      type: 'Bónus 50 stig f. 63 eða meira',
+      type: `Bónus 50 stig f. ${bonus} eða meira`,
       score: 0,
       maxScore: 50,
     },
@@ -42,6 +45,37 @@ export const PlayerSection = ({
     { canEdit: true, type: 'Yatzy, 100 auka stig', score: 0, maxScore: 136 },
     { canEdit: false, type: 'Heildar stig', score: 0, maxScore: 482 },
   ]);
+  */
+
+  // FIXME: FOR TESTING - USE THE ONE ABOVE IN PROD
+  const [typeOfScore, setTypeOfScore] = useState([
+    { canEdit: false, type: 'Ásar', score: 0, maxScore: 6 },
+    { canEdit: false, type: 'Tvistar', score: 0, maxScore: 12 },
+    { canEdit: false, type: 'Þristar', score: 0, maxScore: 18 },
+    { canEdit: false, type: 'Fjarkar', score: 0, maxScore: 24 },
+    { canEdit: false, type: 'Fimmur', score: 0, maxScore: 30 },
+    { canEdit: false, type: 'Sexur', score: 0, maxScore: 36 },
+    { canEdit: false, type: 'Summa', score: 0, maxScore: 126 },
+    {
+      canEdit: false,
+      type: `Bónus 50 stig f. ${bonus} eða meira`,
+      score: 0,
+      maxScore: 50,
+    },
+    { canEdit: false, type: '1 Par', score: 0, maxScore: 12 },
+    { canEdit: false, type: '2 Pör', score: 0, maxScore: 24 },
+    { canEdit: false, type: 'Þrír eins', score: 0, maxScore: 18 },
+    { canEdit: false, type: 'Fjórir eins', score: 0, maxScore: 24 },
+    { canEdit: false, type: 'Fullt hús', score: 0, maxScore: 36 },
+    { canEdit: false, type: 'Lág röð', score: 0, maxScore: 15 },
+    { canEdit: false, type: 'Há röð', score: 0, maxScore: 20 },
+    { canEdit: false, type: 'Stór röð', score: 0, maxScore: 21 },
+    { canEdit: false, type: 'Áhætta', score: 0, maxScore: 36 },
+    { canEdit: true, type: 'Yatzy, 100 auka stig', score: 0, maxScore: 136 },
+    { canEdit: false, type: 'Heildar stig', score: 0, maxScore: 482 },
+  ]);
+
+  // Should be true when typeOfScore.every(score => !score.canEdit)
   const [playerDone, setPlayerDone] = useState(false);
 
   /**
@@ -57,16 +91,6 @@ export const PlayerSection = ({
     });
   };
 
-  const checkIfPlayerFinishedAllMoves = () => {
-    if (typeOfScore.every(score => !score.canEdit)) {
-      setPlayerDone(true);
-    }
-    if (playerDone) {
-      onPlayerFinishedAllMoves(playerNumber);
-    }
-    console.log('playerDone >> ', playerDone);
-  };
-
   /**
    * Submit the score if it is valid
    * @param {*} index the index of the score in the typeOfScore array
@@ -78,7 +102,10 @@ export const PlayerSection = ({
         newState[index].canEdit = false;
         setSumOfFirstSix();
         calculateAndSetTotalSum();
-        checkIfPlayerFinishedAllMoves();
+
+        if (typeOfScore.every(score => !score.canEdit)) {
+          onPlayerFinishedAllMoves();
+        }
         return newState;
       });
     }
@@ -108,7 +135,7 @@ export const PlayerSection = ({
    * Add 50 bonus points if the sum of the first six scores is 50 or more
    */
   const checkIfBonusAndAdd = () => {
-    if (typeOfScore[6].score >= 50) {
+    if (typeOfScore[6].score >= bonus) {
       setTypeOfScore(prevState => {
         const newState = [...prevState];
         newState[7].score = 50;

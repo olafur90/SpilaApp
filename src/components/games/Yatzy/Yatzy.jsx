@@ -6,7 +6,7 @@
  * Reference: https://en.wikipedia.org/wiki/Yatzy
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Alert,
   Button,
@@ -25,7 +25,9 @@ export default function Yatzy() {
     { playerName: 'Óli', score: 0, finishedAllMoves: false },
     { playerName: 'Birna', score: 0, finishedAllMoves: false },
   ]);
+
   const [gameOver, setGameOver] = useState(false);
+  const [winner, setWinner] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
 
   const gameBackgroundImageURI = {
@@ -53,10 +55,24 @@ export default function Yatzy() {
   const handleScoreUpdate = (playerNumber, value) => {
     setPlayers(prevState => {
       const newState = [...prevState];
-      newState[playerNumber - 1].scoreInput = value;
+      newState[playerNumber - 1].score = value;
       return newState;
     });
   };
+
+  useEffect(() => {
+    if (players.every(player => player.finishedAllMoves)) {
+      setGameOver(true);
+      // winner is player with higher score
+      if (players[0].score > players[1].score) {
+        setWinner(players[0].playerName);
+      } else if (players[1].score > players[0].score) {
+        setWinner(players[1].playerName);
+      } else {
+        setWinner('Jafntefli');
+      }
+    }
+  }, [players]);
 
   /**
    * Update the finishedAllMoves property of the player
@@ -86,7 +102,9 @@ export default function Yatzy() {
               playerNumber={index + 1}
               onScoreUpdate={handleScoreUpdate}
               onPlayerNameChange={handlePlayerNameChange}
-              onPlayerFinishedAllMoves={handlePlayerFinishedAllMoves}
+              onPlayerFinishedAllMoves={() =>
+                handlePlayerFinishedAllMoves(index + 1)
+              }
             />
           ))
         ) : (
@@ -96,41 +114,48 @@ export default function Yatzy() {
           </View>
         )}
       </ImageBackground>
+      <GameOverButtonAndModal
+        gameOver={gameOver}
+        winner={players[0].playerName}
+      />
+    </>
+  );
+}
 
-      {/* Button for submitting and ending the game */}
+const GameOverButtonAndModal = ({ gameOver, winner }) => {
+  const [modalVisible, setModalVisible] = useState(false);
+
+  return (
+    <>
       <Button
         style={YatzyStyles.submitGame}
         title="Skrá niðurstöður"
         disabled={!gameOver}
         onPress={() => setModalVisible(true)}
       />
-      {gameOver && (
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
-            setModalVisible(!modalVisible);
-          }}>
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text style={styles.modalText}>Game over</Text>
-              <Text style={styles.modalText}>
-                {`Sigurvegari er: ${players[0].playerName}`}
-              </Text>
-              <Pressable
-                style={[styles.button, styles.buttonClose]}
-                onPress={() => setModalVisible(!modalVisible)}>
-                <Text style={styles.textStyle}>Hide Modal</Text>
-              </Pressable>
-            </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Game over</Text>
+            <Text style={styles.modalText}>{`Sigurvegari er: ${winner}`}</Text>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}>
+              <Text style={styles.textStyle}>Hide Modal</Text>
+            </Pressable>
           </View>
-        </Modal>
-      )}
+        </View>
+      </Modal>
     </>
   );
-}
+};
 
 const styles = StyleSheet.create({
   centeredView: {
