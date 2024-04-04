@@ -10,7 +10,12 @@ import { TypeItem } from './TypeItem';
  * @param {*} player the player object
  * @returns {JSX.Element}
  */
-export const PlayerSection = ({ onPlayerNameChange, playerNumber, player }) => {
+export const PlayerSection = ({
+  onPlayerFinishedAllMoves,
+  onPlayerNameChange,
+  playerNumber,
+  player,
+}) => {
   const [typeOfScore, setTypeOfScore] = useState([
     { canEdit: true, type: 'Ásar', score: 0, maxScore: 6 },
     { canEdit: true, type: 'Tvistar', score: 0, maxScore: 12 },
@@ -37,6 +42,7 @@ export const PlayerSection = ({ onPlayerNameChange, playerNumber, player }) => {
     { canEdit: true, type: 'Yatzy, 100 auka stig', score: 0, maxScore: 136 },
     { canEdit: false, type: 'Heildar stig', score: 0, maxScore: 482 },
   ]);
+  const [playerDone, setPlayerDone] = useState(false);
 
   /**
    * Updates the score value of the score in the typeOfScore[key] array
@@ -51,14 +57,14 @@ export const PlayerSection = ({ onPlayerNameChange, playerNumber, player }) => {
     });
   };
 
-  /**
-   * Simple check to see if user has entered all scores in the typeOfScore array
-   * @returns {boolean}
-   */
-  const checkIfPlayerFinshedAllMoves = () => {
-    if (typeOfScore.every(score => score.canEdit === false)) {
-      return true;
+  const checkIfPlayerFinishedAllMoves = () => {
+    if (typeOfScore.every(score => !score.canEdit)) {
+      setPlayerDone(true);
     }
+    if (playerDone) {
+      onPlayerFinishedAllMoves(playerNumber);
+    }
+    console.log('playerDone >> ', playerDone);
   };
 
   /**
@@ -72,6 +78,7 @@ export const PlayerSection = ({ onPlayerNameChange, playerNumber, player }) => {
         newState[index].canEdit = false;
         setSumOfFirstSix();
         calculateAndSetTotalSum();
+        checkIfPlayerFinishedAllMoves();
         return newState;
       });
     }

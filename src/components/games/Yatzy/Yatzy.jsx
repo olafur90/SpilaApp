@@ -6,7 +6,7 @@
  * Reference: https://en.wikipedia.org/wiki/Yatzy
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Button, ImageBackground, Text, View } from 'react-native';
 import { PlayerSection } from './PlayerSection';
 import { YatzyStyles } from './YatzyStyles';
@@ -18,17 +18,15 @@ export default function Yatzy() {
   ]);
   const [gameOver, setGameOver] = useState(false);
 
-  useEffect(() => {
-    if (players.every(player => player.finishedAllMoves)) {
-      setGameOver(true);
-    }
-  }, [players]);
-
-  // TODO: Find better image to use
   const gameBackgroundImageURI = {
     uri: 'https://play-lh.googleusercontent.com/AWFhjdqGOodPYMI8BtJssHkc93QCkVCnC5SZOr25YDp5e-4bNkNTKfOfXSwVtbfdsiVC',
   };
 
+  /**
+   * Update the name of the player when the edit name button is pressed
+   * @param {*} playerNumber The player number
+   * @param {*} value The new name
+   */
   const handlePlayerNameChange = (playerNumber, value) => {
     setPlayers(prevState => {
       const newState = [...prevState];
@@ -37,6 +35,11 @@ export default function Yatzy() {
     });
   };
 
+  /**
+   * Update the score input of the current player
+   * @param {*} playerNumber The player number
+   * @param {*} value The new score
+   */
   const handleScoreUpdate = (playerNumber, value) => {
     setPlayers(prevState => {
       const newState = [...prevState];
@@ -45,10 +48,15 @@ export default function Yatzy() {
     });
   };
 
+  /**
+   * Update the finishedAllMoves property of the player
+   * @param {*} playerNumber The player number
+   */
   const handlePlayerFinishedAllMoves = playerNumber => {
     setPlayers(prevState => {
       const newState = [...prevState];
       newState[playerNumber - 1].finishedAllMoves = true;
+      console.log(players);
       return newState;
     });
   };
