@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { ImageBackground, StyleSheet, View } from 'react-native';
+import { ImageBackground, View } from 'react-native';
 import CurrentPlayerScores from './CurrentPlayerScores';
 import { PlayerScoreInputContainer } from './PlayerScoreInputContainer';
 import { ScoreHistory } from './ScoreHistory';
+import { scrabbleStyles } from './ScrabbleStyles';
 
 /**
  * The main game component for the Scrabble game.
@@ -59,10 +60,10 @@ export default function Scrabble() {
   return (
     <ImageBackground
       resizeMethod="auto"
-      style={styles.gameBackground}
-      imageStyle={styles.gameBackgroundImage}
+      style={scrabbleStyles.gameBackground}
+      imageStyle={scrabbleStyles.gameBackgroundImage}
       source={gameBackgroundImageURI}>
-      <View style={styles.scoreHistoryContainer}>
+      <View style={scrabbleStyles.scoreHistoryContainer}>
         {players.map((player, index) => (
           <PlayerScoreInputContainer
             key={index}
@@ -76,7 +77,7 @@ export default function Scrabble() {
         ))}
       </View>
       <CurrentPlayerScores playerScores={players} />
-      <View style={styles.scoreHistoryContainer}>
+      <View style={scrabbleStyles.scoreHistoryContainer}>
         {players.map((player, index) => (
           <ScoreHistory key={index} history={player.history} />
         ))}
@@ -84,18 +85,3 @@ export default function Scrabble() {
     </ImageBackground>
   );
 }
-
-const styles = StyleSheet.create({
-  scoreHistoryContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginHorizontal: 20,
-    paddingTop: 10,
-  },
-  gameBackground: {
-    height: '100%',
-  },
-  gameBackgroundImage: {
-    opacity: 0.3,
-  },
-});

@@ -1,12 +1,7 @@
 import React, { useState } from 'react';
-import {
-  Button,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Button, TextInput, TouchableOpacity, View } from 'react-native';
 import { PlayerNameContainer } from '../../util/PlayerNameContainer';
+import { playerScoreInputContainerStyles } from './PlayerScoreInputContainerSTyles';
 
 /**
  * A component that allows the user to add a score to a player
@@ -34,7 +29,7 @@ export const PlayerScoreInputContainer = ({
   };
 
   return (
-    <View style={styles.addScoreInput}>
+    <View style={playerScoreInputContainerStyles.addScoreInput}>
       <PlayerNameContainer
         onPlayerNameChange={onPlayerNameChange}
         playerName={playerName}
@@ -47,13 +42,14 @@ export const PlayerScoreInputContainer = ({
         maxLength={3}
         onChangeText={handleScoreUpdate}
         style={[
-          styles.playerScoreInput,
-          playerTurn !== playerNumber && styles.playerScoreInputDisabled,
+          playerScoreInputContainerStyles.playerScoreInput,
+          playerTurn !== playerNumber &&
+            playerScoreInputContainerStyles.playerScoreInputDisabled,
         ]}
       />
       <TouchableOpacity
         disabled={playerTurn !== playerNumber || !scoreInput}
-        style={styles.addScoreButton}>
+        style={playerScoreInputContainerStyles.addScoreButton}>
         <Button
           disabled={playerTurn !== playerNumber || !scoreInput}
           onPress={() => UpdateScore()}
@@ -63,24 +59,3 @@ export const PlayerScoreInputContainer = ({
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  addScoreButton: {
-    marginTop: 5,
-    width: '45%',
-  },
-  addScoreInput: {
-    width: '45%',
-  },
-  playerScoreInput: {
-    backgroundColor: 'white',
-    borderWidth: 1,
-    color: 'black',
-    height: 40,
-    paddingLeft: 10,
-    width: '100%',
-  },
-  playerScoreInputDisabled: {
-    backgroundColor: '#ddd',
-  },
-});

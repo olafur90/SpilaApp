@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/Entypo';
-import { PlayerNameContainer } from '../../util/PlayerNameContainer';
+import { ScrollView, StyleSheet } from 'react-native';
+import { PlayerInfo } from './PlayerInfo';
+import { TypeItem } from './TypeItem';
 
+/**
+ * View for each player's section
+ * @param {*} onPlayerNameChange a function that is called when the player name is changed
+ * @param {*} playerNumber the number of the player
+ * @param {*} player the player object
+ * @returns {JSX.Element}
+ */
 export const PlayerSection = ({ onPlayerNameChange, playerNumber, player }) => {
   const [typeOfScore, setTypeOfScore] = useState([
     { canEdit: true, type: 'Ásar', score: 0, maxScore: 6 },
@@ -38,26 +38,48 @@ export const PlayerSection = ({ onPlayerNameChange, playerNumber, player }) => {
     { canEdit: false, type: 'Heildar stig', score: 0, maxScore: 482 },
   ]);
 
+  /**
+   * Updates the score value of the score in the typeOfScore[key] array
+   * @param {*} key the index of the score to be changed
+   * @param {*} value the new value
+   */
   const handleScoreChange = (key, value) => {
     setTypeOfScore(prevState => {
       const newState = [...prevState];
-      newState[key].score = parseInt(value);
+      newState[key].score = parseInt(value, 10);
       return newState;
     });
   };
 
-  const submitScores = index => {
+  /**
+   * Simple check to see if user has entered all scores in the typeOfScore array
+   * @returns {boolean}
+   */
+  const checkIfPlayerFinshedAllMoves = () => {
+    if (typeOfScore.every(score => score.canEdit === false)) {
+      return true;
+    }
+  };
+
+  /**
+   * Submit the score if it is valid
+   * @param {*} index the index of the score in the typeOfScore array
+   */
+  const submitScore = index => {
     if (typeOfScore[index].score <= typeOfScore[index].maxScore) {
       setTypeOfScore(prevState => {
         const newState = [...prevState];
         newState[index].canEdit = false;
         setSumOfFirstSix();
-        setTotalSum();
+        calculateAndSetTotalSum();
         return newState;
       });
     }
   };
 
+  /**
+   * Set the sum of the first six scores for the 'summa' field
+   */
   const setSumOfFirstSix = () => {
     const firstSix = typeOfScore.slice(0, 6);
     let sum = 0;
@@ -72,7 +94,14 @@ export const PlayerSection = ({ onPlayerNameChange, playerNumber, player }) => {
       newState[6].score = sum;
       return newState;
     });
-    if (sum >= 50) {
+    checkIfBonusAndAdd();
+  };
+
+  /**
+   * Add 50 bonus points if the sum of the first six scores is 50 or more
+   */
+  const checkIfBonusAndAdd = () => {
+    if (typeOfScore[6].score >= 50) {
       setTypeOfScore(prevState => {
         const newState = [...prevState];
         newState[7].score = 50;
@@ -81,24 +110,24 @@ export const PlayerSection = ({ onPlayerNameChange, playerNumber, player }) => {
     }
   };
 
-  const setTotalSum = () => {
+  /**
+   * Calculate and set the total sum of the scores for the field 'Heildar stig'
+   */
+  const calculateAndSetTotalSum = () => {
     let sum = 0;
     typeOfScore.forEach(score => {
-      if (
-        score.type !== 'Summa' &&
-        score.type !== 'Bónus 50 stig f. 63 eða meira' &&
-        score.type !== 'Heildar stig'
-      ) {
+      if (score.type !== 'Summa' && score.type !== 'Heildar stig') {
         sum += score.score;
       }
     });
     setTypeOfScore(prevState => {
       const newState = [...prevState];
-      newState[17].score = sum;
+      newState[18].score = sum;
       return newState;
     });
   };
 
+  // Returns a view with the player information and all the input fields
   return (
     <ScrollView style={styles.playerInfoSection}>
       <PlayerInfo
@@ -111,7 +140,7 @@ export const PlayerSection = ({ onPlayerNameChange, playerNumber, player }) => {
           handleScoreChange={handleScoreChange}
           key={index}
           index={index}
-          setScore={() => submitScores(index)}
+          setScore={() => submitScore(index)}
           scoreType={scoreType}
         />
       ))}
@@ -119,112 +148,15 @@ export const PlayerSection = ({ onPlayerNameChange, playerNumber, player }) => {
   );
 };
 
-export const TypeItem = ({ index, setScore, scoreType, handleScoreChange }) => {
-  const split = scoreType.type === 'Bónus 50 stig f. 63 eða meira';
-
-  return (
-    <>
-      <View style={[styles.typeItem]}>
-        <Text style={styles.typeItemTitle}>{scoreType.type}</Text>
-        {scoreType.canEdit ? (
-          <>
-            <TextInput
-              keyboardType="numeric"
-              editable={!split}
-              onChangeText={value => handleScoreChange(index, value)}
-              style={[styles.scoreInput, split && { backgroundColor: '#ddd' }]}
-            />
-            <TouchableOpacity
-              onPress={() => setScore()}
-              style={styles.scoreCheckTouchableButton}>
-              <Icon style={styles.scoreCheckButton} name="check" />
-            </TouchableOpacity>
-          </>
-        ) : (
-          <View
-            style={{
-              justifyContent: 'center',
-              height: 50,
-              paddingRight: 40,
-              textAlign: 'center',
-            }}>
-            <Text
-              style={[
-                styles.scoreText,
-                scoreType.type === 'Summa' && { fontWeight: 'bold' },
-              ]}>
-              {scoreType.score}
-            </Text>
-          </View>
-        )}
-      </View>
-      {split && <View style={styles.divider} />}
-    </>
-  );
-};
-
-export const PlayerInfo = ({ player, playerNumber, onPlayerNameChange }) => {
-  return (
-    <View style={styles.playerNameContainer}>
-      <PlayerNameContainer
-        playerName={player.playerName}
-        playerNumber={playerNumber}
-        onPlayerNameChange={onPlayerNameChange}
-      />
-    </View>
-  );
-};
-
+/**
+ * Styles for the components in this file
+ */
 const styles = StyleSheet.create({
   /* TODO: use css class instead of line, not working right now need chatGPT */
   disabledGreyColor: {
     color: '#ddd',
   },
-  scoreText: {
-    color: 'black',
-    fontSize: 20,
-  },
   playerInfoSection: {
     flex: 1,
-  },
-  typeItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginHorizontal: 10,
-  },
-  scoreInput: {
-    backgroundColor: 'white',
-    borderWidth: 1,
-    color: 'black',
-    flex: 4,
-    height: 40,
-    maxHeight: 50,
-    marginLeft: 15,
-    marginVertical: 5,
-    textAlign: 'center',
-  },
-  divider: {
-    borderBottomColor: 'black',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    marginVertical: 20,
-  },
-  typeItemTitle: {
-    alignSelf: 'center',
-    flex: 4,
-    color: 'black',
-    fontWeight: 'bold',
-    maxWidth: 70,
-  },
-  scoreCheckButton: {
-    color: 'blue',
-  },
-  scoreCheckTouchableButton: {
-    flex: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  playerNameContainer: {
-    marginVertical: 10,
-    marginLeft: 20,
   },
 });

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
@@ -8,6 +7,7 @@ import {
   useColorScheme,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
+import { playerNameContainerStyles } from './PlayerNameContainerStyles';
 
 /**
  * A component that displays the name of the player and an edit button
@@ -31,22 +31,26 @@ export const PlayerNameContainer = ({
   };
 
   return (
-    <View style={styles.playerNameContainer}>
+    <View style={playerNameContainerStyles.playerNameContainer}>
       {!inEditMode ? (
         <TouchableOpacity
           onPress={() => setInEditMode(true)}
-          style={[styles.editButton]}>
+          style={[playerNameContainerStyles.editButton]}>
           <Icon
-            style={[colorScheme === 'dark' && styles.darkText]}
+            style={[
+              colorScheme === 'dark' && playerNameContainerStyles.darkText,
+            ]}
             name="edit"
           />
         </TouchableOpacity>
       ) : (
         <TouchableOpacity
           onPress={() => handlePlayerNameChange(newPlayerName)}
-          style={[styles.editButton]}>
+          style={[playerNameContainerStyles.editButton]}>
           <Icon
-            style={[colorScheme === 'dark' && styles.darkText]}
+            style={[
+              colorScheme === 'dark' && playerNameContainerStyles.darkText,
+            ]}
             name="check"
           />
         </TouchableOpacity>
@@ -57,15 +61,15 @@ export const PlayerNameContainer = ({
           maxLength={12}
           onChangeText={value => setNewPlayerName(value)}
           style={[
-            styles.editPlayerName,
-            colorScheme === 'dark' && styles.darkText,
+            playerNameContainerStyles.editPlayerName,
+            colorScheme === 'dark' && playerNameContainerStyles.darkText,
           ]}
         />
       ) : (
         <Text
           style={[
-            styles.playerName,
-            colorScheme === 'dark' && styles.darkText,
+            playerNameContainerStyles.playerName,
+            colorScheme === 'dark' && playerNameContainerStyles.darkText,
           ]}>
           {playerName}
         </Text>
@@ -73,31 +77,3 @@ export const PlayerNameContainer = ({
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  playerName: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 5,
-  },
-  editPlayerName: {
-    borderWidth: 1,
-    color: 'black',
-  },
-  playerNameDark: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 5,
-  },
-  editButton: {
-    alignSelf: 'center',
-    fontSize: 16,
-    marginRight: 10,
-  },
-  playerNameContainer: {
-    flexDirection: 'row',
-  },
-  darkText: {
-    color: 'black',
-  },
-});
