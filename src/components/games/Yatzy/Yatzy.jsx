@@ -10,6 +10,7 @@ import React, { useEffect, useState } from 'react';
 import {
   Alert,
   Button,
+  DeviceEventEmitter,
   ImageBackground,
   Modal,
   Pressable,
@@ -20,7 +21,7 @@ import {
 import { PlayerSection } from './PlayerSection';
 import { YatzyStyles } from './YatzyStyles';
 
-export default function Yatzy({ navigation }) {
+export default function Yatzy({ navigation, updateGameId, gameId }) {
   const [players, setPlayers] = useState([
     { playerName: 'Óli', score: 0, finishedAllMoves: false },
     { playerName: 'Birna', score: 0, finishedAllMoves: false },
@@ -52,7 +53,6 @@ export default function Yatzy({ navigation }) {
    * @param {*} value The new score
    */
   const handleScoreUpdate = (playerNumber, value) => {
-    console.log(playerNumber, value);
     setPlayers(prevState => {
       const newState = [...prevState];
       newState[playerNumber - 1].score = value;
@@ -74,18 +74,19 @@ export default function Yatzy({ navigation }) {
         setWinner('Jafntefli');
       }
       setGameOver(true);
-      navigation.navigate('Yatzy');
+      navigation.navigate('Yatzy', { gameId: gameId + 1 });
     }
-  }, [navigation, players]);
+  }, [navigation, players, gameId]);
 
   /**
    * Update the finishedAllMoves property of the player
    * @param {*} playerNumber The player number
    */
-  const handlePlayerFinishedAllMoves = playerNumber => {
+  const handlePlayerFinishedAllMoves = (playerNumber, value) => {
     setPlayers(prevState => {
       const newState = [...prevState];
       newState[playerNumber - 1].finishedAllMoves = true;
+      newState[playerNumber - 1].score = value;
       return newState;
     });
   };
@@ -104,19 +105,26 @@ export default function Yatzy({ navigation }) {
             playerNumber={index + 1}
             onScoreUpdate={handleScoreUpdate}
             onPlayerNameChange={handlePlayerNameChange}
-            onPlayerFinishedAllMoves={() =>
-              handlePlayerFinishedAllMoves(index + 1)
-            }
+            onPlayerFinishedAllMoves={handlePlayerFinishedAllMoves}
           />
         ))}
       </ImageBackground>
-      <GameOverButtonAndModal gameOver={gameOver} winner={winner} />
+      <GameOverButtonAndModal
+        updateGameId={updateGameId}
+        gameOver={gameOver}
+        winner={winner}
+      />
     </>
   );
 }
 
-const GameOverButtonAndModal = ({ gameOver, winner }) => {
+const GameOverButtonAndModal = ({ gameOver, winner, updateGameId }) => {
   const [modalVisible, setModalVisible] = useState(false);
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
+    DeviceEventEmitter.emit('updateGameId', updateGameId);
+  };
 
   return (
     <>
@@ -137,10 +145,14 @@ const GameOverButtonAndModal = ({ gameOver, winner }) => {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>Game over</Text>
-            <Text style={styles.modalText}>{`Sigurvegari er: ${winner}`}</Text>
+            <Text style={styles.modalText}>
+              {winner !== 'Jafntefli'
+                ? `Sigurvegari er: ${winner}`
+                : 'Jafntefli'}
+            </Text>
             <Pressable
               style={[styles.button, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}>
+              onPress={handleCloseModal}>
               <Text style={styles.textStyle}>Hide Modal</Text>
             </Pressable>
           </View>
@@ -191,5 +203,6 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: 'center',
+    color: 'black',
   },
 });

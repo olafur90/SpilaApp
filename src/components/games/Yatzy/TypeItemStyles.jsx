@@ -17,8 +17,9 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   confirmedScores: {
-    justifyContent: 'center',
+    color: 'red',
     height: 50,
+    justifyContent: 'center',
     paddingRight: 40,
     textAlign: 'center',
   },

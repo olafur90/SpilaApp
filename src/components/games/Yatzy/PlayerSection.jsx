@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { PlayerInfo } from './PlayerInfo';
 import { TypeItem } from './TypeItem';
 
@@ -17,42 +17,18 @@ export const PlayerSection = ({
   playerNumber,
   player,
 }) => {
-  /*
-  const [typeOfScore, setTypeOfScore] = useState([
-    { canEdit: true, type: 'Ásar', score: 0, maxScore: 6 },
-    { canEdit: true, type: 'Tvistar', score: 0, maxScore: 12 },
-    { canEdit: true, type: 'Þristar', score: 0, maxScore: 18 },
-    { canEdit: true, type: 'Fjarkar', score: 0, maxScore: 24 },
-    { canEdit: true, type: 'Fimmur', score: 0, maxScore: 30 },
-    { canEdit: true, type: 'Sexur', score: 0, maxScore: 36 },
-    { canEdit: false, type: 'Summa', score: 0, maxScore: 126 },
-    {
-      canEdit: false,
-      type: `Bónus 50 stig f. ${bonus} eða meira`,
-      score: 0,
-      maxScore: 50,
-    },
-    { canEdit: true, type: '1 Par', score: 0, maxScore: 12 },
-    { canEdit: true, type: '2 Pör', score: 0, maxScore: 24 },
-    { canEdit: true, type: 'Þrír eins', score: 0, maxScore: 18 },
-    { canEdit: true, type: 'Fjórir eins', score: 0, maxScore: 24 },
-    { canEdit: true, type: 'Fullt hús', score: 0, maxScore: 36 },
-    { canEdit: true, type: 'Lág röð', score: 0, maxScore: 15 },
-    { canEdit: true, type: 'Há röð', score: 0, maxScore: 20 },
-    { canEdit: true, type: 'Stór röð', score: 0, maxScore: 21 },
-    { canEdit: true, type: 'Áhætta', score: 0, maxScore: 36 },
-    { canEdit: true, type: 'Yatzy, 100 auka stig', score: 0, maxScore: 136 },
-    { canEdit: false, type: 'Heildar stig', score: 0, maxScore: 482 },
+  // TODO: REMEMBER TO CHANGE ALL CANEDIT TO TRUE AFTER TESTING
+  const numberOfDice = 6;
+  const [upperNumbers, setUpperNumbers] = useState([
+    { canEdit: true, type: 'Ásar', score: 0, maxScore: 1 * numberOfDice },
+    { canEdit: true, type: 'Tvistar', score: 0, maxScore: 2 * numberOfDice },
+    { canEdit: true, type: 'Þristar', score: 0, maxScore: 3 * numberOfDice },
+    { canEdit: true, type: 'Fjarkar', score: 0, maxScore: 4 * numberOfDice },
+    { canEdit: true, type: 'Fimmur', score: 0, maxScore: 5 * numberOfDice },
+    { canEdit: true, type: 'Sexur', score: 0, maxScore: 6 * numberOfDice },
   ]);
-  */
 
-  const [typeOfScore, setTypeOfScore] = useState([
-    { canEdit: true, type: 'Ásar', score: 0, maxScore: 6 },
-    { canEdit: true, type: 'Tvistar', score: 0, maxScore: 12 },
-    { canEdit: true, type: 'Þristar', score: 0, maxScore: 18 },
-    { canEdit: true, type: 'Fjarkar', score: 0, maxScore: 24 },
-    { canEdit: true, type: 'Fimmur', score: 0, maxScore: 30 },
-    { canEdit: true, type: 'Sexur', score: 0, maxScore: 36 },
+  const [lowerNumbers, setLowerNumbers] = useState([
     { canEdit: true, type: '1 Par', score: 0, maxScore: 12 },
     { canEdit: true, type: '2 Pör', score: 0, maxScore: 24 },
     { canEdit: true, type: 'Þrír eins', score: 0, maxScore: 18 },
@@ -65,21 +41,17 @@ export const PlayerSection = ({
     { canEdit: true, type: 'Yatzy, 100 auka stig', score: 0, maxScore: 136 },
   ]);
 
-  /*
-  const [typeOfScore, setTypeOfScore] = useState([
+  /* FIXME: TEST GÖGN
+  const [upperNumbers, setUpperNumbers] = useState([
     { canEdit: false, type: 'Ásar', score: 0, maxScore: 6 },
     { canEdit: false, type: 'Tvistar', score: 0, maxScore: 12 },
     { canEdit: false, type: 'Þristar', score: 0, maxScore: 18 },
     { canEdit: false, type: 'Fjarkar', score: 0, maxScore: 24 },
     { canEdit: false, type: 'Fimmur', score: 0, maxScore: 30 },
     { canEdit: false, type: 'Sexur', score: 0, maxScore: 36 },
-    { canEdit: false, type: 'Summa', score: 0, maxScore: 126 },
-    {
-      canEdit: false,
-      type: `Bónus 50 stig f. ${scoreNeededForBonus} eða meira`,
-      score: 0,
-      maxScore: 50,
-    },
+  ]);
+
+  const [lowerNumbers, setLowerNumbers] = useState([
     { canEdit: false, type: '1 Par', score: 0, maxScore: 12 },
     { canEdit: false, type: '2 Pör', score: 0, maxScore: 24 },
     { canEdit: false, type: 'Þrír eins', score: 0, maxScore: 18 },
@@ -90,7 +62,6 @@ export const PlayerSection = ({
     { canEdit: false, type: 'Stór röð', score: 0, maxScore: 21 },
     { canEdit: false, type: 'Áhætta', score: 0, maxScore: 36 },
     { canEdit: true, type: 'Yatzy, 100 auka stig', score: 0, maxScore: 136 },
-    { canEdit: false, type: 'Heildar stig', score: 0, maxScore: 482 },
   ]);
   */
 
@@ -101,87 +72,93 @@ export const PlayerSection = ({
 
   /**
    * Updates the score value of the score in the typeOfScore[key] array
+   * On input change in the score input TextInput area
    * @param {*} key the index of the score to be changed
    * @param {*} value the new value
    */
-  const handleScoreChange = (key, value) => {
-    setTypeOfScore(prevState => {
-      const newState = [...prevState];
-      newState[key].score = parseInt(value, 10);
-      return newState;
-    });
+  const handleScoreChange = (upper, key, value) => {
+    upper
+      ? setUpperNumbers(prevState => {
+          if (value <= upperNumbers[key].maxScore) {
+            const newState = [...prevState];
+            newState[key].score = parseInt(value, 10);
+            return newState;
+          } else {
+            return prevState;
+          }
+        })
+      : setLowerNumbers(prevState => {
+          if (value <= lowerNumbers[key].maxScore) {
+            const newState = [...prevState];
+            newState[key].score = parseInt(value, 10);
+            return newState;
+          } else {
+            return prevState;
+          }
+        });
   };
 
   /**
    * Submit the score if it is valid
+   * @param {*} upper true if the score is for the upper section else false
    * @param {*} index the index of the score in the typeOfScore array
    */
-  const submitScore = index => {
-    if (typeOfScore[index].score <= typeOfScore[index].maxScore) {
-      setTypeOfScore(prevState => {
-        const newState = [...prevState];
-        newState[index].canEdit = false;
-        setSumOfFirstSix();
-        calculateAndSetTotalSum();
+  const submitScore = (upper, index) => {
+    upper
+      ? setUpperNumbers(prevState => {
+          if (upperNumbers[index].score <= upperNumbers[index].maxScore) {
+            const newState = [...prevState];
+            newState[index].canEdit = false;
+            if (playerDone()) {
+              onPlayerFinishedAllMoves(index, calculatedTotalSum);
+            }
+            return newState;
+          }
+        })
+      : setLowerNumbers(prevState => {
+          if (lowerNumbers[index].score <= lowerNumbers[index].maxScore) {
+            const newState = [...prevState];
+            newState[index].canEdit = false;
+            if (playerDone()) {
+              onPlayerFinishedAllMoves(playerNumber, calculatedTotalSum);
+            }
+            return newState;
+          }
+        });
+  };
 
-        if (typeOfScore.every(score => !score.canEdit)) {
-          onPlayerFinishedAllMoves(playerNumber);
-          onScoreUpdate(playerNumber, typeOfScore[17].score);
-        }
-        return newState;
-      });
+  const playerDone = () => {
+    const allScoresEdited =
+      upperNumbers.every(score => !score.canEdit) &&
+      lowerNumbers.every(score => !score.canEdit);
+    if (allScoresEdited) {
+      return true;
     }
   };
 
   /**
-   * Set the sum of the first six scores for the 'summa' field
+   * Calculate the sum of the first six scores
+   * and the total sum of all scores
+   * when any score changes
    */
-  const setSumOfFirstSix = () => {
-    const firstSix = typeOfScore.slice(0, 6);
-    let sum = 0;
-    firstSix.forEach(score => {
-      if (score.type === 'Summa') {
-        return;
-      }
-      sum += score.score;
-    });
-    setCalculatedSumOfFirstSix(sum);
-    checkIfBonusAndAdd();
-  };
-
   useEffect(() => {
-    setGetsBonus(calculatedSumOfFirstSix >= scoreNeededForBonus);
-  }, [calculatedSumOfFirstSix]);
-
-  /**
-   * Add 50 bonus points if the sum of the first six scores is 50 or more
-   */
-  const checkIfBonusAndAdd = () => {
-    if (typeOfScore[6].score >= scoreNeededForBonus) {
-      setTypeOfScore(prevState => {
-        const newState = [...prevState];
-        newState[7].score = 50;
-        return newState;
+    let accSumUpperSection = 0;
+    upperNumbers &&
+      upperNumbers.forEach(score => {
+        accSumUpperSection += score.score;
       });
-    }
-  };
+    setCalculatedSumOfFirstSix(accSumUpperSection);
 
-  /**
-   * Calculate and set the total sum of the scores for the field 'Heildar stig'
-   */
-  const calculateAndSetTotalSum = () => {
-    let sum = 0;
-    typeOfScore.forEach(score => {
-      if (score.type !== 'Summa' && score.type !== 'Heildar stig') {
-        sum += score.score;
-      }
-    });
-    setTypeOfScore(prevState => {
-      const newState = [...prevState];
-      newState[18].score = sum;
-      return newState;
-    });
-  };
+    let accSumLowerSection = 0;
+    lowerNumbers &&
+      lowerNumbers.forEach(score => {
+        accSumLowerSection += score.score;
+      });
+    setCalculatedTotalSum(
+      accSumLowerSection + calculatedSumOfFirstSix + (getsBonus ? 50 : 0),
+    );
+    setGetsBonus(calculatedSumOfFirstSix >= scoreNeededForBonus);
+  }, [upperNumbers, lowerNumbers, calculatedSumOfFirstSix, getsBonus]);
 
   // Returns a view with the player information and all the input fields
   return (
@@ -191,15 +168,40 @@ export const PlayerSection = ({
         playerNumber={playerNumber}
         onPlayerNameChange={onPlayerNameChange}
       />
-      {typeOfScore.map((scoreType, index) => (
-        <TypeItem
-          handleScoreChange={handleScoreChange}
-          key={index}
-          index={index}
-          setScore={() => submitScore(index)}
-          scoreType={scoreType}
-        />
-      ))}
+      {upperNumbers &&
+        upperNumbers.map((scoreType, index) => (
+          <TypeItem
+            handleScoreChange={handleScoreChange}
+            key={index}
+            upper={true}
+            index={index}
+            setScore={submitScore}
+            scoreType={scoreType}
+          />
+        ))}
+      <View style={styles.scoreTextContainer}>
+        <Text
+          style={styles.scoreText}>{`Summa: ${calculatedSumOfFirstSix}`}</Text>
+      </View>
+      <View style={styles.scoreTextContainer}>
+        <Text style={styles.scoreText}>{`Bónus: ${getsBonus ? 50 : 0}`}</Text>
+        <View style={styles.divider}></View>
+      </View>
+      {lowerNumbers &&
+        lowerNumbers.map((scoreType, index) => (
+          <TypeItem
+            handleScoreChange={handleScoreChange}
+            key={index}
+            index={index}
+            upper={false}
+            setScore={submitScore}
+            scoreType={scoreType}
+          />
+        ))}
+      <View style={styles.scoreTextContainer}>
+        <Text style={styles.scoreText}>Heildar stig: </Text>
+        <Text style={styles.scoreText}>{calculatedTotalSum}</Text>
+      </View>
     </ScrollView>
   );
 };
@@ -214,5 +216,21 @@ const styles = StyleSheet.create({
   },
   playerInfoSection: {
     flex: 1,
+  },
+
+  divider: {
+    borderBottomColor: 'black',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    marginVertical: 20,
+  },
+  scoreTextContainer: {
+    flexDirection: 'row',
+    height: 40,
+    paddingLeft: 20,
+    paddingTop: 5,
+  },
+  scoreText: {
+    color: 'black',
+    fontSize: 20,
   },
 });

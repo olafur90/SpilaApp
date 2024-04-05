@@ -11,9 +11,13 @@ import { styles } from './TypeItemStyles';
  * @param {*} handleScoreChange A function that updates the score in the typeOfScore array
  * @returns {JSX.Element}
  */
-export const TypeItem = ({ index, setScore, scoreType, handleScoreChange }) => {
-  const split = scoreType.type === 'Bónus 50 stig f. 63 eða meira';
-
+export const TypeItem = ({
+  upper,
+  index,
+  setScore,
+  scoreType,
+  handleScoreChange,
+}) => {
   return (
     <>
       <View style={[styles.typeItem]}>
@@ -22,30 +26,27 @@ export const TypeItem = ({ index, setScore, scoreType, handleScoreChange }) => {
           <>
             <TextInput
               keyboardType="numeric"
-              editable={!split}
-              onChangeText={value => handleScoreChange(index, value)}
-              style={[styles.scoreInput, split && { backgroundColor: '#ddd' }]}
+              maxLength={3}
+              value={
+                scoreType.score <= scoreType.maxScore && scoreType.score > 0
+                  ? `${scoreType.score}`
+                  : ''
+              }
+              onChangeText={value => handleScoreChange(upper, index, value)}
+              style={[styles.scoreInput]}
             />
             <TouchableOpacity
-              onPress={() => setScore()}
+              onPress={() => setScore(upper, index)}
               style={styles.scoreCheckTouchableButton}>
               <Icon style={styles.scoreCheckButton} name="check" />
             </TouchableOpacity>
           </>
         ) : (
           <View style={styles.confirmedScores}>
-            <Text
-              style={[
-                styles.scoreText,
-                (scoreType.type === 'Summa' ||
-                  scoreType.type === 'Heildar stig') && { fontWeight: 'bold' },
-              ]}>
-              {scoreType.score}
-            </Text>
+            <Text>{scoreType.score}</Text>
           </View>
         )}
       </View>
-      {split && <View style={styles.divider} />}
     </>
   );
 };
