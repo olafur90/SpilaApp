@@ -20,7 +20,7 @@ import {
 import { PlayerSection } from './PlayerSection';
 import { YatzyStyles } from './YatzyStyles';
 
-export default function Yatzy() {
+export default function Yatzy({ navigation }) {
   const [players, setPlayers] = useState([
     { playerName: 'Óli', score: 0, finishedAllMoves: false },
     { playerName: 'Birna', score: 0, finishedAllMoves: false },
@@ -28,7 +28,6 @@ export default function Yatzy() {
 
   const [gameOver, setGameOver] = useState(false);
   const [winner, setWinner] = useState('');
-  const [modalVisible, setModalVisible] = useState(false);
 
   const gameBackgroundImageURI = {
     uri: 'https://play-lh.googleusercontent.com/AWFhjdqGOodPYMI8BtJssHkc93QCkVCnC5SZOr25YDp5e-4bNkNTKfOfXSwVtbfdsiVC',
@@ -53,6 +52,7 @@ export default function Yatzy() {
    * @param {*} value The new score
    */
   const handleScoreUpdate = (playerNumber, value) => {
+    console.log(playerNumber, value);
     setPlayers(prevState => {
       const newState = [...prevState];
       newState[playerNumber - 1].score = value;
@@ -60,9 +60,11 @@ export default function Yatzy() {
     });
   };
 
+  /**
+   * Check if the game is over and set the winner
+   */
   useEffect(() => {
     if (players.every(player => player.finishedAllMoves)) {
-      setGameOver(true);
       // winner is player with higher score
       if (players[0].score > players[1].score) {
         setWinner(players[0].playerName);
@@ -71,8 +73,10 @@ export default function Yatzy() {
       } else {
         setWinner('Jafntefli');
       }
+      setGameOver(true);
+      navigation.navigate('Yatzy');
     }
-  }, [players]);
+  }, [navigation, players]);
 
   /**
    * Update the finishedAllMoves property of the player
@@ -82,7 +86,6 @@ export default function Yatzy() {
     setPlayers(prevState => {
       const newState = [...prevState];
       newState[playerNumber - 1].finishedAllMoves = true;
-      console.log(players);
       return newState;
     });
   };
@@ -94,30 +97,20 @@ export default function Yatzy() {
         style={YatzyStyles.gameBackground}
         imageStyle={YatzyStyles.gameBackgroundImage}
         source={gameBackgroundImageURI}>
-        {!gameOver ? (
-          players.map((player, index) => (
-            <PlayerSection
-              key={index}
-              player={player}
-              playerNumber={index + 1}
-              onScoreUpdate={handleScoreUpdate}
-              onPlayerNameChange={handlePlayerNameChange}
-              onPlayerFinishedAllMoves={() =>
-                handlePlayerFinishedAllMoves(index + 1)
-              }
-            />
-          ))
-        ) : (
-          <View style={YatzyStyles.gameOverView}>
-            <Text style={YatzyStyles.gameOverText}>Game over</Text>
-            <Button style={YatzyStyles.playAgainButton} title="Spila aftur" />
-          </View>
-        )}
+        {players.map((player, index) => (
+          <PlayerSection
+            key={index}
+            player={player}
+            playerNumber={index + 1}
+            onScoreUpdate={handleScoreUpdate}
+            onPlayerNameChange={handlePlayerNameChange}
+            onPlayerFinishedAllMoves={() =>
+              handlePlayerFinishedAllMoves(index + 1)
+            }
+          />
+        ))}
       </ImageBackground>
-      <GameOverButtonAndModal
-        gameOver={gameOver}
-        winner={players[0].playerName}
-      />
+      <GameOverButtonAndModal gameOver={gameOver} winner={winner} />
     </>
   );
 }

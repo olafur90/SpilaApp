@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { PlayerInfo } from './PlayerInfo';
 import { TypeItem } from './TypeItem';
@@ -13,11 +13,10 @@ import { TypeItem } from './TypeItem';
 export const PlayerSection = ({
   onPlayerFinishedAllMoves,
   onPlayerNameChange,
+  onScoreUpdate,
   playerNumber,
   player,
 }) => {
-  const bonus = 63;
-
   /*
   const [typeOfScore, setTypeOfScore] = useState([
     { canEdit: true, type: 'Ásar', score: 0, maxScore: 6 },
@@ -47,7 +46,26 @@ export const PlayerSection = ({
   ]);
   */
 
-  // FIXME: FOR TESTING - USE THE ONE ABOVE IN PROD
+  const [typeOfScore, setTypeOfScore] = useState([
+    { canEdit: true, type: 'Ásar', score: 0, maxScore: 6 },
+    { canEdit: true, type: 'Tvistar', score: 0, maxScore: 12 },
+    { canEdit: true, type: 'Þristar', score: 0, maxScore: 18 },
+    { canEdit: true, type: 'Fjarkar', score: 0, maxScore: 24 },
+    { canEdit: true, type: 'Fimmur', score: 0, maxScore: 30 },
+    { canEdit: true, type: 'Sexur', score: 0, maxScore: 36 },
+    { canEdit: true, type: '1 Par', score: 0, maxScore: 12 },
+    { canEdit: true, type: '2 Pör', score: 0, maxScore: 24 },
+    { canEdit: true, type: 'Þrír eins', score: 0, maxScore: 18 },
+    { canEdit: true, type: 'Fjórir eins', score: 0, maxScore: 24 },
+    { canEdit: true, type: 'Fullt hús', score: 0, maxScore: 36 },
+    { canEdit: true, type: 'Lág röð', score: 0, maxScore: 15 },
+    { canEdit: true, type: 'Há röð', score: 0, maxScore: 20 },
+    { canEdit: true, type: 'Stór röð', score: 0, maxScore: 21 },
+    { canEdit: true, type: 'Áhætta', score: 0, maxScore: 36 },
+    { canEdit: true, type: 'Yatzy, 100 auka stig', score: 0, maxScore: 136 },
+  ]);
+
+  /*
   const [typeOfScore, setTypeOfScore] = useState([
     { canEdit: false, type: 'Ásar', score: 0, maxScore: 6 },
     { canEdit: false, type: 'Tvistar', score: 0, maxScore: 12 },
@@ -58,7 +76,7 @@ export const PlayerSection = ({
     { canEdit: false, type: 'Summa', score: 0, maxScore: 126 },
     {
       canEdit: false,
-      type: `Bónus 50 stig f. ${bonus} eða meira`,
+      type: `Bónus 50 stig f. ${scoreNeededForBonus} eða meira`,
       score: 0,
       maxScore: 50,
     },
@@ -74,9 +92,12 @@ export const PlayerSection = ({
     { canEdit: true, type: 'Yatzy, 100 auka stig', score: 0, maxScore: 136 },
     { canEdit: false, type: 'Heildar stig', score: 0, maxScore: 482 },
   ]);
+  */
 
-  // Should be true when typeOfScore.every(score => !score.canEdit)
-  const [playerDone, setPlayerDone] = useState(false);
+  const [calculatedSumOfFirstSix, setCalculatedSumOfFirstSix] = useState(0);
+  const [calculatedTotalSum, setCalculatedTotalSum] = useState(0);
+  const [getsBonus, setGetsBonus] = useState(false);
+  const scoreNeededForBonus = 63;
 
   /**
    * Updates the score value of the score in the typeOfScore[key] array
@@ -104,7 +125,8 @@ export const PlayerSection = ({
         calculateAndSetTotalSum();
 
         if (typeOfScore.every(score => !score.canEdit)) {
-          onPlayerFinishedAllMoves();
+          onPlayerFinishedAllMoves(playerNumber);
+          onScoreUpdate(playerNumber, typeOfScore[17].score);
         }
         return newState;
       });
@@ -123,19 +145,19 @@ export const PlayerSection = ({
       }
       sum += score.score;
     });
-    setTypeOfScore(prevState => {
-      const newState = [...prevState];
-      newState[6].score = sum;
-      return newState;
-    });
+    setCalculatedSumOfFirstSix(sum);
     checkIfBonusAndAdd();
   };
+
+  useEffect(() => {
+    setGetsBonus(calculatedSumOfFirstSix >= scoreNeededForBonus);
+  }, [calculatedSumOfFirstSix]);
 
   /**
    * Add 50 bonus points if the sum of the first six scores is 50 or more
    */
   const checkIfBonusAndAdd = () => {
-    if (typeOfScore[6].score >= bonus) {
+    if (typeOfScore[6].score >= scoreNeededForBonus) {
       setTypeOfScore(prevState => {
         const newState = [...prevState];
         newState[7].score = 50;
