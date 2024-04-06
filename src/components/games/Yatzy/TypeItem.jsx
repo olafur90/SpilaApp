@@ -43,7 +43,7 @@ export const TypeItem = ({
           </>
         ) : (
           <View style={styles.confirmedScores}>
-            <Text>{scoreType.score}</Text>
+            <Text style={styles.confirmedScoresText}>{scoreType.score}</Text>
           </View>
         )}
       </View>

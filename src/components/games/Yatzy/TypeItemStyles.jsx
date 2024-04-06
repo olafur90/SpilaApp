@@ -1,10 +1,12 @@
 import { StyleSheet } from 'react-native';
 
+const mainTextColor = 'black';
+
 export const styles = StyleSheet.create({
   typeItemTitle: {
     alignSelf: 'center',
     flex: 4,
-    color: 'black',
+    color: mainTextColor,
     fontWeight: 'bold',
     maxWidth: 70,
   },
@@ -15,6 +17,10 @@ export const styles = StyleSheet.create({
     flex: 2,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  confirmedScoresText: {
+    color: mainTextColor,
+    fontSize: 20,
   },
   confirmedScores: {
     color: 'red',
@@ -36,10 +42,10 @@ export const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderWidth: 1,
     color: 'black',
-    flex: 4,
+    flex: 3,
     height: 40,
     maxHeight: 50,
-    marginLeft: 15,
+    marginLeft: 25,
     marginVertical: 5,
     textAlign: 'center',
   },

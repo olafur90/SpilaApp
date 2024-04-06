@@ -19,6 +19,7 @@ export const PlayerSection = ({
 }) => {
   // TODO: REMEMBER TO CHANGE ALL CANEDIT TO TRUE AFTER TESTING
   const numberOfDice = 6;
+  /*
   const [upperNumbers, setUpperNumbers] = useState([
     { canEdit: true, type: 'Ásar', score: 0, maxScore: 1 * numberOfDice },
     { canEdit: true, type: 'Tvistar', score: 0, maxScore: 2 * numberOfDice },
@@ -40,8 +41,8 @@ export const PlayerSection = ({
     { canEdit: true, type: 'Áhætta', score: 0, maxScore: 36 },
     { canEdit: true, type: 'Yatzy, 100 auka stig', score: 0, maxScore: 136 },
   ]);
-
-  /* FIXME: TEST GÖGN
+*/
+  /* FIXME: TEST GÖGN */
   const [upperNumbers, setUpperNumbers] = useState([
     { canEdit: false, type: 'Ásar', score: 0, maxScore: 6 },
     { canEdit: false, type: 'Tvistar', score: 0, maxScore: 12 },
@@ -63,7 +64,6 @@ export const PlayerSection = ({
     { canEdit: false, type: 'Áhætta', score: 0, maxScore: 36 },
     { canEdit: true, type: 'Yatzy, 100 auka stig', score: 0, maxScore: 136 },
   ]);
-  */
 
   const [calculatedSumOfFirstSix, setCalculatedSumOfFirstSix] = useState(0);
   const [calculatedTotalSum, setCalculatedTotalSum] = useState(0);
@@ -179,25 +179,29 @@ export const PlayerSection = ({
             scoreType={scoreType}
           />
         ))}
+      <View style={styles.divider} />
       <View style={styles.scoreTextContainer}>
         <Text
           style={styles.scoreText}>{`Summa: ${calculatedSumOfFirstSix}`}</Text>
       </View>
       <View style={styles.scoreTextContainer}>
         <Text style={styles.scoreText}>{`Bónus: ${getsBonus ? 50 : 0}`}</Text>
-        <View style={styles.divider}></View>
       </View>
-      {lowerNumbers &&
-        lowerNumbers.map((scoreType, index) => (
-          <TypeItem
-            handleScoreChange={handleScoreChange}
-            key={index}
-            index={index}
-            upper={false}
-            setScore={submitScore}
-            scoreType={scoreType}
-          />
-        ))}
+      <View style={styles.divider} />
+      <View style={{ marginBottom: 15 }}>
+        {lowerNumbers &&
+          lowerNumbers.map((scoreType, index) => (
+            <TypeItem
+              handleScoreChange={handleScoreChange}
+              key={index}
+              index={index}
+              upper={false}
+              setScore={submitScore}
+              scoreType={scoreType}
+            />
+          ))}
+      </View>
+      <View style={styles.divider} />
       <View style={styles.scoreTextContainer}>
         <Text style={styles.scoreText}>Heildar stig: </Text>
         <Text style={styles.scoreText}>{calculatedTotalSum}</Text>
@@ -220,8 +224,8 @@ const styles = StyleSheet.create({
 
   divider: {
     borderBottomColor: 'black',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    marginVertical: 20,
+    borderBottomWidth: 1,
+    flex: 1,
   },
   scoreTextContainer: {
     flexDirection: 'row',
