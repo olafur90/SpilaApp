@@ -13,13 +13,12 @@ import { TypeItem } from './TypeItem';
 export const PlayerSection = ({
   onPlayerFinishedAllMoves,
   onPlayerNameChange,
-  onScoreUpdate,
   playerNumber,
   player,
 }) => {
   // TODO: REMEMBER TO CHANGE ALL CANEDIT TO TRUE AFTER TESTING
   const numberOfDice = 6;
-  /*
+
   const [upperNumbers, setUpperNumbers] = useState([
     { canEdit: true, type: 'Ásar', score: 0, maxScore: 1 * numberOfDice },
     { canEdit: true, type: 'Tvistar', score: 0, maxScore: 2 * numberOfDice },
@@ -39,29 +38,6 @@ export const PlayerSection = ({
     { canEdit: true, type: 'Há röð', score: 0, maxScore: 20 },
     { canEdit: true, type: 'Stór röð', score: 0, maxScore: 21 },
     { canEdit: true, type: 'Áhætta', score: 0, maxScore: 36 },
-    { canEdit: true, type: 'Yatzy, 100 auka stig', score: 0, maxScore: 136 },
-  ]);
-*/
-  /* FIXME: TEST GÖGN */
-  const [upperNumbers, setUpperNumbers] = useState([
-    { canEdit: false, type: 'Ásar', score: 0, maxScore: 6 },
-    { canEdit: false, type: 'Tvistar', score: 0, maxScore: 12 },
-    { canEdit: false, type: 'Þristar', score: 0, maxScore: 18 },
-    { canEdit: false, type: 'Fjarkar', score: 0, maxScore: 24 },
-    { canEdit: false, type: 'Fimmur', score: 0, maxScore: 30 },
-    { canEdit: false, type: 'Sexur', score: 0, maxScore: 36 },
-  ]);
-
-  const [lowerNumbers, setLowerNumbers] = useState([
-    { canEdit: false, type: '1 Par', score: 0, maxScore: 12 },
-    { canEdit: false, type: '2 Pör', score: 0, maxScore: 24 },
-    { canEdit: false, type: 'Þrír eins', score: 0, maxScore: 18 },
-    { canEdit: false, type: 'Fjórir eins', score: 0, maxScore: 24 },
-    { canEdit: false, type: 'Fullt hús', score: 0, maxScore: 36 },
-    { canEdit: false, type: 'Lág röð', score: 0, maxScore: 15 },
-    { canEdit: false, type: 'Há röð', score: 0, maxScore: 20 },
-    { canEdit: false, type: 'Stór röð', score: 0, maxScore: 21 },
-    { canEdit: false, type: 'Áhætta', score: 0, maxScore: 36 },
     { canEdit: true, type: 'Yatzy, 100 auka stig', score: 0, maxScore: 136 },
   ]);
 
@@ -128,12 +104,10 @@ export const PlayerSection = ({
   };
 
   const playerDone = () => {
-    const allScoresEdited =
+    return (
       upperNumbers.every(score => !score.canEdit) &&
-      lowerNumbers.every(score => !score.canEdit);
-    if (allScoresEdited) {
-      return true;
-    }
+      lowerNumbers.every(score => !score.canEdit)
+    );
   };
 
   /**

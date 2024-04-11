@@ -16,6 +16,7 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
   const appName = 'Spila Appið';
+  const games = [Yatzy, Scrabble, Rommi];
   useEffect(() => {
     const initializeDatabase = async () => {
       try {
@@ -36,16 +37,27 @@ export default function App() {
           <Stack.Screen
             options={{
               headerTintColor: '#000',
-              headerStyle: { backgroundColor: '#fff' },
+              headerStyle: { backgroundColor: '#1CAFef' },
               headerTitleAlign: 'center',
               title: appName,
             }}
             name="Heim"
             component={Home}
           />
-          <Stack.Screen name="Scrabble" component={Scrabble} />
-          <Stack.Screen name="Yatzy" component={Yatzy} />
-          <Stack.Screen name="Rommi" component={Rommi} />
+          {games.map((game, index) => (
+            <Stack.Screen
+              key={index}
+              name={game.name}
+              component={game}
+              options={{
+                headerTintColor: '#555',
+                headerTitleAlign: 'center',
+                headerTitleStyle: { fontWeight: 'bold', fontSize: 26 },
+                headerStyle: { backgroundColor: '#1CAFef' },
+                title: game.name,
+              }}
+            />
+          ))}
         </Stack.Navigator>
       </NavigationContainer>
     </>

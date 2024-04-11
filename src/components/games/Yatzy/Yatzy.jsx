@@ -10,7 +10,7 @@ import React, { useEffect, useState } from 'react';
 import {
   Alert,
   Button,
-  DeviceEventEmitter,
+  Dimensions,
   ImageBackground,
   Modal,
   Pressable,
@@ -111,6 +111,7 @@ export default function Yatzy({ navigation, updateGameId, gameId }) {
       </ImageBackground>
       <GameOverButtonAndModal
         updateGameId={updateGameId}
+        navigation={navigation}
         gameOver={gameOver}
         winner={winner}
       />
@@ -118,12 +119,16 @@ export default function Yatzy({ navigation, updateGameId, gameId }) {
   );
 }
 
-const GameOverButtonAndModal = ({ gameOver, winner, updateGameId }) => {
+const GameOverButtonAndModal = ({
+  navigation,
+  gameOver,
+  winner,
+  updateGameId,
+}) => {
   const [modalVisible, setModalVisible] = useState(false);
 
-  const handleCloseModal = () => {
-    setModalVisible(false);
-    DeviceEventEmitter.emit('updateGameId', updateGameId);
+  const updateModal = () => {
+    setModalVisible(!modalVisible);
   };
 
   return (
@@ -144,23 +149,50 @@ const GameOverButtonAndModal = ({ gameOver, winner, updateGameId }) => {
         }}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Game over</Text>
             <Text style={styles.modalText}>
               {winner !== 'Jafntefli'
                 ? `Sigurvegari er: ${winner}`
                 : 'Jafntefli'}
             </Text>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={handleCloseModal}>
-              <Text style={styles.textStyle}>Hide Modal</Text>
-            </Pressable>
+            <ReplayButton navigation={navigation} updateModal={updateModal} />
+            <EndGameButton navigation={navigation} updateModal={updateModal} />
           </View>
         </View>
       </Modal>
     </>
   );
 };
+
+const EndGameButton = ({ navigation, updateModal }) => {
+  const handleCloseModalAndGoHome = () => {
+    updateModal();
+    navigation.navigate('Heim');
+  };
+  return (
+    <Pressable
+      style={[styles.button, styles.buttonClose]}
+      onPress={handleCloseModalAndGoHome}>
+      <Text style={styles.textStyle}>Hætta</Text>
+    </Pressable>
+  );
+};
+
+const ReplayButton = ({ navigation, updateModal }) => {
+  const handleCloseModalAndReplay = () => {
+    updateModal();
+    navigation.navigate('Heim');
+    navigation.navigate('Yatzy');
+  };
+  return (
+    <Pressable
+      style={[styles.button, styles.buttonReplay]}
+      onPress={handleCloseModalAndReplay}>
+      <Text style={styles.textStyle}>Nýr leikur</Text>
+    </Pressable>
+  );
+};
+
+const deviceWidth = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
   centeredView: {
@@ -193,7 +225,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#F194FF',
   },
   buttonClose: {
+    backgroundColor: 'red',
+    width: deviceWidth * 0.4,
+  },
+  buttonReplay: {
     backgroundColor: '#2196F3',
+    marginBottom: 10,
+    width: deviceWidth * 0.4,
   },
   textStyle: {
     color: 'white',
@@ -204,5 +242,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: 'center',
     color: 'black',
+    fontWeight: 'bold',
+    fontSize: 25,
   },
 });

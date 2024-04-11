@@ -9,6 +9,7 @@ export const playerNameContainerStyles = StyleSheet.create({
   editPlayerName: {
     borderWidth: 1,
     color: 'black',
+    minWidth: 100,
   },
   playerNameDark: {
     fontSize: 20,
