@@ -131,6 +131,7 @@ export const PlayerSection = ({
     setCalculatedTotalSum(
       accSumLowerSection + calculatedSumOfFirstSix + (getsBonus ? 50 : 0),
     );
+    // FIXME: Tjekka hvort þetta setGetsBonus þurfi ekki að vera fyrir ofan línuna hér á undan
     setGetsBonus(calculatedSumOfFirstSix >= scoreNeededForBonus);
   }, [upperNumbers, lowerNumbers, calculatedSumOfFirstSix, getsBonus]);
 
